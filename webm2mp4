@@ -1,0 +1,13 @@
+#!/bin/bash
+for file in "$@"
+do
+    NAME=$file
+    NEW_NAME=${NAME//\.[^.]*/.mp4}
+    ffmpeg -i "$NAME" -preset slow -map 0:v:0 -map 0:a:0? -vf "pad=ceil(iw/2)*2:ceil(ih/2)*2" "$NEW_NAME" 
+    if [ $? -eq 0 ]; then
+	rm "$NAME"
+    else
+	rm "$NEW_NAME"
+    fi
+done
+
