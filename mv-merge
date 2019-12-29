@@ -1,0 +1,10 @@
+#!/bin/bash
+
+DEST="${@:${#@}}"
+ABS_DEST="$(cd "$(dirname "$DEST")"; pwd)/$(basename "$DEST")"
+
+for SRC in ${@:1:$((${#@} -1))}; do   (
+    find "$SRC" -type d -exec mkdir -p "${ABS_DEST}"/\{} \;
+    find "$SRC" -type f -exec mv \{} "${ABS_DEST}"/\{} \;
+    find "$SRC" -type d -empty -delete
+) done
