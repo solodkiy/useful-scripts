@@ -5,19 +5,16 @@ PATTERN='^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}\.[0-9]{2}\.[0-9]{2}\.[a-z0-9]+$'
 for FILE in "$@"
 do
     if echo "$FILE" | egrep -i "$PATTERN" -q ; then
-      continue
+        continue
     fi    
+    if [ -d "$FILE" ]; then
+        continue
+    fi
 
     EXT=`echo "${FILE##*.}" | tr '[:upper:]' '[:lower:]'`
-    if [ "$EXT" == "jpg" ]; then
-        exiv2 -t -r '%Y-%m-%d %H.%M.%S' rename "$FILE"
-    elif [ "$EXT" == "m4v" ]; then
-        VIDEO_DATE=`exiftool -time:ContentCreateDate -d "%Y-%m-%d %H.%M.%S" -s -s -s "$FILE"`
-        if [[ "$VIDEO_DATE" ]]; then
-            mv "$FILE" "$VIDEO_DATE.$EXT"
-        fi
-    else
-        echo "Unsupported extension for $FILE"
+    DATE=`exiftool -time:CreateDate -d "%Y-%m-%d %H.%M.%S" -s -s -s "$FILE"`
+    if [[ "$DATE" ]]; then
+        mv -i "$FILE" "$DATE.$EXT"
     fi
 done
 
