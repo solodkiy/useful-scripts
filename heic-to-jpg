@@ -1,0 +1,10 @@
+#!/bin/bash
+for file in "$@"
+do
+    NAME=$file
+    NEW_NAME=${NAME//\.[^.]*/.jpg}
+    heif-convert $NAME $NEW_NAME
+    if [ $? -eq 0 ]; then
+        rm "$NAME"
+    fi
+done
