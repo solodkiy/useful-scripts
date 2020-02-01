@@ -12,7 +12,10 @@ do
     fi
 
     EXT=`echo "${FILE##*.}" | tr '[:upper:]' '[:lower:]'`
-    DATE=`exiftool -time:CreateDate -d "%Y-%m-%d %H.%M.%S" -s -s -s "$FILE"`
+    DATE=`exiftool -time:ContentCreateDate -d "%Y-%m-%d %H.%M.%S" -s -s -s "$FILE"`
+    if [[ -z "$DATE" ]]; then
+        DATE=`exiftool -time:CreateDate -d "%Y-%m-%d %H.%M.%S" -s -s -s "$FILE"`
+    fi 
     if [[ "$DATE" ]]; then
         mv -i "$FILE" "$DATE.$EXT"
     fi
